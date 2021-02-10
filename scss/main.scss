@@ -1,0 +1,64 @@
+@import "./resets";
+@import "./variables";
+
+// Functions are used to compute values and return them
+@function weights($weight-name) {
+  @return map-get($font-weights, $weight-name);
+}
+
+// Mixins are similar to functions, but they are used to define styles
+@mixin flexCenter($direction) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: $direction;
+}
+
+@mixin theme($light-theme: true) {
+  @if $light-theme {
+    background: lighten($primary-color, 100%);
+    color: darken($secondary-color, 100%);
+  }
+}
+
+@mixin mobile {
+  @media only screen and (max-width: $mobile) {
+    @content;
+  }
+}
+
+body {
+  background-color: $primary-color;
+  color: $secondary-color;
+}
+
+.main {
+  @include flexCenter(row);
+  width: 80%;
+  margin: 0 auto;
+  //   Applying interpolation #{}
+  //   parent -> &
+  #{&}__paragraph1 {
+    font-weight: weights(regular);
+
+    &:hover {
+      color: pink;
+    }
+  }
+
+  #{&}__paragraph2 {
+    @extend .main__paragraph1;
+
+    &:hover {
+      color: $accent-color;
+    }
+  }
+
+  @include mobile() {
+    flex-direction: column;
+  }
+}
+
+.light {
+  @include theme($light-theme: true);
+}
